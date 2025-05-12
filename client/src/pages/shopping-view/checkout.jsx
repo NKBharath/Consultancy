@@ -46,9 +46,9 @@ function ShoppingCheckout() {
         title: "Please select one address to proceed.",
         variant: "destructive",
       });
-
-      return;
+      return 
     }
+    
 
     const orderData = {
       userId: user?.id,
@@ -90,11 +90,9 @@ function ShoppingCheckout() {
       }
     });
   }
-
   if (approvalURL) {
     window.location.href = approvalURL;
   }
-
   return (
     <div className="flex flex-col">
       <div className="relative h-[300px] w-full overflow-hidden">
