@@ -19,33 +19,31 @@ const createOrder = async (req, res) => {
       payerId,
       cartId,
     } = req.body;
-        const newlyCreatedOrder = new Order({
-          userId,
-          cartId,
-          cartItems,
-          addressInfo,
-          orderStatus,
-          paymentMethod,
-          paymentStatus,
-          totalAmount,
-          orderDate,
-          orderUpdateDate,
-          paymentId,
-          payerId,
-        });
 
-        await newlyCreatedOrder.save();
+    const newlyCreatedOrder = new Order({
+      userId,
+      cartId,
+      cartItems,
+      addressInfo,
+      orderStatus,
+      paymentMethod,
+      paymentStatus,
+      totalAmount,
+      orderDate,
+      orderUpdateDate,
+      paymentId,
+      payerId,
+    });
 
-        const approvalURL = paymentInfo.links.find(
-          (link) => link.rel === "approval_url"
-        ).href;
+    await newlyCreatedOrder.save();
 
-        res.status(201).json({
-          success: true,
-          approvalURL,
-          orderId: newlyCreatedOrder._id,
-        });
-      
+    // Optionally delete cart after order
+    await Cart.findByIdAndDelete(cartId);
+
+    res.status(201).json({
+      success: true,
+      orderId: newlyCreatedOrder._id,
+    });
   } catch (e) {
     console.log(e);
     res.status(500).json({
@@ -54,6 +52,7 @@ const createOrder = async (req, res) => {
     });
   }
 };
+
 
 const capturePayment = async (req, res) => {
   try {
